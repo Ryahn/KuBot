@@ -444,8 +444,6 @@
                 chat_message("<b>%s</b> spins the bottle after it spins it lands on <b>%s</b> ^^" % (self.getAlias(user.name), random.choice(room.usernames)), True)
         elif used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_fun_parkour and cmd == "parkour":
                 chat_message(random.choice(["Does a backflip xD", "Does a frontflip xD", "Climbs a high wall and freeruns off of it w00t", "Leaps off a bridge into a ravine brining yer mum with him. BICH",]))
-        elif used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_fun_fap and cmd == "fap":
-                chat_message("<b>%s</b>, faps to <b>%s</b>" % self.getAlias(user.name), random.choice(fapthings), True)
 
         elif used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_game_8ball and cmd == "8ball" and len(args) > 0:
                                   chat_message("<i>The 8ball says</i> - <b>%s</b> -" % (random.choice(persona.eightball)), True)

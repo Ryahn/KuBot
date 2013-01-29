@@ -4,7 +4,7 @@ import sys
 defaultRoom = "debotsch"        # A play channel for the bot to sit in, makes it where you have a place to test commands.
 
 # Bot Version Information [Do not change!]
-botver="version-0.05.04-alpha"  # Current version of the bot updates.
+botver="version-0.05.05-alpha"  # Current version of the bot updates.
 trunk="master"                  # Git Trunk / Branch
 codename="KuBot"                # Name of the Bot's Branch
 botdev="Kukumakranka"           # Name of the Bot Developer

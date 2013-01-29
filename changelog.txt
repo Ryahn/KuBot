@@ -1,3 +1,12 @@
+version-0.05.05-alpha
+
+Updated call me alias command to help mitigate errors that occur when the user only says "call"
+Removed a bunch of commands from bot_commands.py, we feel these commands are unnecessary, if you want them, download an old update (version-0.05.04) and transfer them into commands.py
+Cleared out a bunch of old sql command mode stub information, sqlite3 won't be introduced til version 2 so we have no reason to include it yet.
+
+Trimmed out the fat, removed fapthings as it wasn't needed anymore.
+
+
 version-0.05.04-alpha
 
 Link change for updates, more efficient.

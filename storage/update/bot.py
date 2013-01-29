@@ -24,8 +24,6 @@ import subprocess
 import lvl_config
 import ranks_config
 import zipfile
-if bot_conf.mode.lower() == "sql":
-     import sqlite3
 from bot_conf import hexc as hexc1
 # End of Imports
 # Determine our Logging Information: (Might not be important, depends on mode.)
@@ -49,22 +47,6 @@ print("Hi I am %s" % bot_conf.botname.title())
 print("I am currently running on core version: %s" % bot_conf.botver.title())
 # Update our Status to "Online"
 print("[INF] Attempting to set status to Online...")
-if bot_conf.mode.lower() == "sql":
-    try:
-        conn = sqlite3.connect('storage/database/bot.db')
-    except:
-        print("[ERR] Database Connection Failed")
-        dbstatus = "error"
-    if lockdown == True:
-        status = "lockdown"
-        print("[INF] Status is in Lockdown mode, will start up in Lockdown Mode...")
-        conn.execute("UPDATE settings SET setting_value = 'lockdown' WHERE setting_name = 'status'")
-    if lockdown == False:
-        status = "online"
-        print("[INF] Status is in Online Mode..")
-        conn.execute("UPDATE settings SET setting_value = 'online' WHERE setting_name = 'status'")
-    if dbstatus == "available":
-        conn.commit()
 if bot_conf.mode.lower() == "flatfile":
     if lockdown == True:
         status = "lockdown"
@@ -81,23 +63,7 @@ if bot_conf.mode.lower() == "flatfile":
         file.write("Online")
         file.close()
 # End Status Update
-# Store temporary memory tables for various text files. Unimportant in SQL Mode (SQL Mode stays Live.)
 bot_startup_time = datetime.datetime.now()
-# Load the Definitions Table
-if bot_conf.mode.lower() == "flatfile":
-    dictionary = dict()
-    f = open("storage/flatfile/various/definitions.txt", "r")
-    print("[INF] Loading the Definitions Table...")
-    time.sleep(1)
-    for line in f.readlines():
-        try:
-            if len(line.strip())>0:
-                word, definition, name = json.loads(line.strip())
-                dictionary[word] = json.dumps([definition, name])
-        except:
-            print("[ERR] Definition not loaded: %s" % line)
-    f.close()
-# End Loading the Definition Table
 
 # Populate the 'users' table.
 ranks = ranks_config.ranks
@@ -138,23 +104,6 @@ if bot_conf.mode.lower() == "flatfile":
         if len(name.strip())>0: rooms.append(name.strip())
     print("[INF] Loading the default Rooms... %s" % len(rooms))
     f.close()
-if bot_conf.mode.lower() == "sql":
-    rooms = []
-    rooms.append(bot_conf.defaultRoom)
-    try:
-        conn = sqlite3.connect('storage/database/bot.db')
-    except:
-        print("[ERR] Database Connection Failed")
-        dbstatus = "error"
-    counted = 0
-    for row in conn.execute("SELECT room FROM rooms WHERE banned = '0';"):
-        if bot_conf.debug.lower() == "on":
-            print(row[0])
-        counted = counted + 1
-        if len(row[0].strip())>0: rooms.append(row[0].strip())
-    if bot_conf.debug.lower() == "on":
-        print(rooms)
-    print("[INF] Loading the default Rooms... %s" % counted)
 # End Loading the Default Rooms Table
 # Load the Banned Rooms Table
 if bot_conf.mode.lower() == "flatfile":
@@ -164,22 +113,6 @@ if bot_conf.mode.lower() == "flatfile":
         if len(name.strip())>0: badrooms.append(name.strip())
     print("[INF] Loading the Banned Rooms... %s" % len(badrooms))
     f.close()
-if bot_conf.mode.lower() == "sql":
-    badrooms = []
-    try:
-        conn = sqlite3.connect('storage/database/bot.db')
-    except:
-        print("[ERR] Database Connection Failed")
-        dbstatus = "error"
-    counted = 0
-    for row in conn.execute("SELECT room FROM rooms WHERE banned = '1';"):
-        if bot_conf.debug.lower() == "on":
-            print(row[0])
-        counted = counted + 1
-        if len(row[0].strip())>0: badrooms.append(row[0].strip())
-    if bot_conf.debug.lower() == "on":
-        print(badrooms)
-    print("[INF] Loading the Banned Rooms... %s" % counted)
 # End Loading the Banned Rooms Table
 # Load the Banned Words Table
 if bot_conf.mode.lower() == "flatfile":
@@ -189,22 +122,6 @@ if bot_conf.mode.lower() == "flatfile":
         if len(name.strip())>0: cuss.append(name.strip())
     print("[INF] Loading the Banned Words... %s" % len(cuss))
     f.close()
-if bot_conf.mode.lower() == "sql":
-    cuss = []
-    try:
-        conn = sqlite3.connect('storage/database/bot.db')
-    except:
-        print("[ERR] Database Connection Failed")
-        dbstatus = "error"
-    counted = 0
-    for row in conn.execute("SELECT entry FROM words WHERE banned = '1';"):
-        if bot_conf.debug.lower() == "on":
-            print(row[0])
-        counted = counted + 1
-        if len(row[0].strip())>0: cuss.append(row[0].strip())
-    if bot_conf.debug.lower() == "on":
-        print(cuss)
-    print("[INF] Loading the Banned Words... %s" % counted)
 # End Loading the Banned Words Table
 # Load the Spam Warning Table
 if bot_conf.mode.lower() == "flatfile":
@@ -214,23 +131,6 @@ if bot_conf.mode.lower() == "flatfile":
         if len(name.strip())>0: spamwarn.append(name.strip())
     print("[INF] Loading the Spam Warnings... %s" % len(spamwarn))
     f.close()
-if bot_conf.mode.lower() == "sql":
-    spamwarn = []
-    try:
-        conn = sqlite3.connect('storage/database/bot.db')
-    except:
-        print("[ERR] Database Connection Failed")
-        dbstatus = "error"
-    counted = 0
-    for row in conn.execute("SELECT username FROM warnings;"):
-        if bot_conf.debug.lower() == "on":
-            print(row[0])
-        counted = counted + 1
-        if len(row[0].strip())>0: spamwarn.append(row[0].strip())
-    if bot_conf.debug.lower() == "on":
-        print(spamwarn)
-    print("[INF] Loading the Spam Warnings... %s" % counted)
-
 # End Loading the Spam Warnings Table
 # End Loading of Rooms, Banned Words & Spammer Warnings
 # Miscellaneous
@@ -256,41 +156,13 @@ print("[INF] Loading Greets...")
 for name in f.readlines():
         if len(name.strip())>0: greets.append(name.strip())
 f.close()
-#fapstuff
 
-fapthings = []
-
-f = open("storage/flatfile/other/fapthings.txt", "r") # read-only
-
-for name in f.readlines():
-
-        if len(name.strip())>0: fapthings.append(name.strip())
-
-time.sleep(1)
-
-print("[INF] Loading Fap things... %s" % len(fapthings))
-
-f.close()
-
-#END
-
-
-
+# Load up the Random Facts Data
 randomfacts = []
-
 f = open("storage/flatfile/other/randomfacts.txt", "r")
-
 for name in f.readlines():
-
         if len(name.strip())>0: randomfacts.append(name.strip())
-
 f.close()
-
-
-
-
-
-
 
 ###########################################################
 
@@ -303,16 +175,11 @@ ipcache = []
 lastcache = 0
 
 if sys.version_info[0] > 2:
-
         import urllib.request as urlreq
-
 else:
-
         import urllib2 as urlreq
-        
-        #dance moves was here
-
-activated = True # Disabled on default
+    
+activated = True
 
 try:
     prefix = bot_conf.prefix
@@ -321,57 +188,8 @@ except:
 
 greetson = True
 
-
-
 def onPMMessage(self, pm, user, body):
-
         pm.message(user, body) #hehe... echo :3
-
-
-
-def getUptime():
-
-    """
-
-    Returns the number of minutes since the program started.
-
-    """
-
-    # do return startTime if you just want the process start time
-
-    return (time.time() - startTime) / 60.00 / 60.00
-
- 
-# System Uptime (No real clue why this is even necessary anymore.)    
-def uptime():
-     try:
-         f = open( "/proc/uptime" )
-         contents = f.read().split()
-         f.close()
-     except:
-        return "Cannot open uptime file: /proc/uptime"
-     total_seconds = float(contents[0])
-     # Helper vars:
-     MINUTE  = 60
-     HOUR    = MINUTE * 60
-     DAY     = HOUR * 24
-     # Get the days, hours, etc:
-     days    = int( total_seconds / DAY )
-     hours   = int( ( total_seconds % DAY ) / HOUR )
-     minutes = int( ( total_seconds % HOUR ) / MINUTE )
-     seconds = int( total_seconds % MINUTE )
-     # Build up the pretty string (like this: "N days, N hours, N minutes, N seconds")
-     string = ""
-     if days > 0:
-         string += str(days) + " " + (days == 1 and "day" or "days" ) + ", "
-     if len(string) > 0 or hours > 0:
-         string += str(hours) + " " + (hours == 1 and "hour" or "hours" ) + ", "
-     if len(string) > 0 or minutes > 0:
-         string += str(minutes) + " " + (minutes == 1 and "minute" or "minutes" ) + ", "
-     string += str(seconds) + " " + (seconds == 1 and "second" or "seconds" )
-     return string;
-
-
 
 class b(ch.RoomManager):
     def onInit(self):
@@ -1368,90 +1186,33 @@ class b(ch.RoomManager):
                                 if name in room.usernames:room.message("~gives <b>%s</b> %s ~" % (self.getAlias(name), definition), True)
         # Command End
 
-
-        #mod list
-
+        # Command Usage: 'mods
         elif used_prefix and cmd == "mods" and self.getAccess(user.name.lower()) > 1:
+            r = args
+            if len(args) == 0: r = room.name
+            if not r: room.message("im not there o-o")
+            room.message("The mods are: <b>%s</b> and <b>%s</b> owns it xD"  % (", ".join(self.getRoom(r).modnames), self.getRoom(r).ownername), True)
+        # Command End
 
-                r = args
-
-                if len(args) == 0: r = room.name
-
-                if not r: room.message("im not there o-o")
-
-                room.message("The mods are: <b>%s</b> and <b>%s</b> owns it xD"  % (", ".join(self.getRoom(r).modnames), self.getRoom(r).ownername), True)
-
-
-
-        #music player
-
-        elif used_prefix and cmd == "next" and user.name == bot_conf.botowner:
-
-                song = random.choice(music)
-
-                webbrowser.open(song)
-
-                room.message("starting next song hope you enjoy it (:")
-
-        #tabs
-
-        elif used_prefix and cmd == "tab" and user.name == bot_conf.botowner:
-
-                url = args
-
-                webbrowser.open_new_tab(url)
-
-                room.message("opening tab in your browser now (:")
-
-
-
-        # help command
-
+        # Command Usage: 'help, '?, 'commands
         elif used_prefix and (cmd == "help" or cmd == "?" or cmd == "commands"):
+            chat_message("<a href=\"http://www.wix.com/knight214210/sirbot/\" target=\"_blank\"><b>Command list</b></a>", True)
+        # Command End
 
-                chat_message("<a href=\"http://www.wix.com/knight214210/sirbot/\" target=\"_blank\"><b>Command list</b></a>", True)
-
-
-
-        # join room
-
+        # Command Usage: 'goto <roomname>, 'join <roomname>
         elif (used_prefix and cmd == "goto" or cmd == "join")  and len(args) > 0 and self.getAccess(user.name.lower()) > 3:
-
-                name = args
-
-                if not args in badrooms: print("[INF] Joining %s..." % args.split()[0])
-
-                if args in badrooms: print("[WAR] Badroom %s detected" % args)
-
-                if not args in badrooms: self.joinRoom(args.split()[0])
-
-                if not args in badrooms: chat_message("Joining <font color='#FF0000'><b>%s</b></font>..." % args, True)
-
-                self.getRoom("debotsch").message("%s made me <b>join %s</b> from %s" % (user.name.title(), name,  room.name), True)
-
-                if args in badrooms: chat_message("<b>%s</b> I can not join <b>%s</b> because its a blacklisted room" % (user.name.title(), args), True)
-
-        elif used_prefix and cmd == "trace":
-
-                if self.getAccess(user.name.lower()) > 4:
-
-                        name = args
-
-                        if name in trace:
-
-                                room.message("%s:[%s]" % (name, message.ip).join(trace), True)
-
-
+            name = args
+            if not args in badrooms: print("[INF] Joining %s..." % args.split()[0])
+            if args in badrooms: print("[WAR] Badroom %s detected" % args)
+            if not args in badrooms: self.joinRoom(args.split()[0])
+            if not args in badrooms: chat_message("Joining <font color='#FF0000'><b>%s</b></font>..." % args, True)
+            self.getRoom("debotsch").message("%s made me <b>join %s</b> from %s" % (user.name.title(), name,  room.name), True)
+            if args in badrooms: chat_message("<b>%s</b> I can not join <b>%s</b> because its a blacklisted room" % (user.name.title(), args), True)
+        # Command End
 
         # Basic "Everyone" Commands
 
-
-
         # We will start importing commands.py here.
-
-
-
-
 
 ########################################################################################
 
@@ -1459,52 +1220,28 @@ class b(ch.RoomManager):
 
 ########################################################################################
 
-
-
 def hexc(e):
-
         et, ev, tb      = sys.exc_info()
-
         if not tb: print(str(e))
-
         while tb:
-
                 lineno = tb.tb_lineno
-
                 fn      = tb.tb_frame.f_code.co_filename
-
                 tb      = tb.tb_next
-
         print("(%s:%i) %s" % (fn, lineno, str(e)))
 
-
-
 if __name__ == "__main__":
-
         error = 0
-
         try:
-
             if os.name == "nt":
-
                 os.system("cls")
-
             else:
-
                 os.system("clear")
-
             b.easy_start(rooms, bot_conf.botname, bot_conf.password)
-
         except KeyboardInterrupt:
-
             print("[ERR] Console initiated a kill.")
-
         except Exception as e:
-
             print("[ERR] Fatal error.")
-
             error = 1
-
             hexc(e)
         try:
             for rank in ranks:
@@ -1532,8 +1269,6 @@ if __name__ == "__main__":
                 f.write(json.dumps([word, definition, name])+"\n")
             f.close()
             print("[SAV] The Definitions Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Definitions Table does not have to be Saved in SQL Mode...")
         # End Saving the Definitions Table
         # Save the Spam Warnings Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1541,8 +1276,6 @@ if __name__ == "__main__":
             f.write("\n".join(spamwarn))
             f.close()
             print("[SAV] The Spam Warnings Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Spam Warnings Table does not have to be Saved in SQL Mode...")
         # End Saving the Spam Warnings Table
         # Save the Banned Words Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1550,8 +1283,6 @@ if __name__ == "__main__":
             f.write("\n".join(cuss))
             f.close()
             print("[SAV] The Banned Words Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Banned Words Table does not have to be Saved in SQL Mode...")
         # End Saving the Banned Words Table
         # Save the Default Rooms Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1561,8 +1292,6 @@ if __name__ == "__main__":
             f.write("\n".join(f2))
             f.close()
             print("[SAV] The Default Rooms Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Default Rooms Table does not have to be Saved in SQL Mode...")
         # End Saving the Default Rooms Table
         # Save the Banned Rooms Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1570,8 +1299,6 @@ if __name__ == "__main__":
             f.write("\n".join(badrooms))
             f.close()
             print("[SAV] The Banned Rooms Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Banned Rooms Table does not have to be Saved in SQL Mode...")
         # End Saving the Banned Rooms Table
         # Save the User Greets Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1579,8 +1306,6 @@ if __name__ == "__main__":
             f.write("\n".join(greets))
             f.close()
             print("[SAV] The User Greets Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The User Greets Table does not have to be Saved in SQL Mode...")
         # End Saving the User Greets Table
         # Save the Music Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1588,8 +1313,6 @@ if __name__ == "__main__":
             f.write("\n".join(music))
             f.close()
             print("[SAV] The Music Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Music Table does not have to be Saved in SQL Mode...")
         # End Saving the Music Table
         # Save the Tabs Table back to Hardfile..
         if bot_conf.mode.lower() == "flatfile":
@@ -1597,26 +1320,8 @@ if __name__ == "__main__":
             f.write("\n".join(tabs))
             f.close()
             print("[SAV] The Tabs Table has been Flushed to Disk...")
-        if bot_conf.mode.lower() == "sql":
-            print("[SAV] The Tabs Table does not have to be Saved in SQL Mode...")
         # End Saving the Tabs Table
         # Update our Status to "Offline"
-        if bot_conf.mode.lower() == "sql":
-            try:
-                conn = sqlite3.connect('storage/database/bot.db')
-            except:
-                print("[ERR] Database Connection Failed")
-                dbstatus = "error"
-            if lockdown == True:
-                status = "offline"
-                print("[INF] Time to go Sleepy By")
-                conn.execute("UPDATE settings SET setting_value = 'offline' WHERE setting_name = 'status'")
-            if lockdown == False:
-                status = "offline"
-                print("[INF] Time to go Sleepy By")
-                conn.execute("UPDATE settings SET setting_value = 'offline' WHERE setting_name = 'status'")
-            if dbstatus == "available":
-                conn.commit()
         if bot_conf.mode.lower() == "flatfile":
             if lockdown == True:
                 status = "offline"

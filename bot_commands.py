@@ -1,14 +1,4 @@
         # These commands are maintained by the bot developers. If you are interested in having a command you wrote here, contact the bot developer. Your commands go in commands.py
-
-        # Command Usage: 'ty or 'thanks
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_ty and message.body.lower() == "ty" or self.getAccess(user.name) >= lvl_config.rank_req_say_ty and message.body.lower() == "thanks":
-            try:
-                chat_message("<font color='#%s' face='%s' size='%s'>%s, you ish very welcome</font>" % (font_color, font_face, font_size, self.getAlias(user.name)), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: ty] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
         
         # Command Usage: 'whois <username>
         if used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_whois and cmd == "whois" and len(args) > 0:
@@ -16,103 +6,6 @@
                 chat_message("<font color='#%s' face='%s' size='%s'><b>%s</b>, I found %s with the following accounts: %s</font>" % (font_color, font_face, font_size, self.getAlias(user.name), args, ", ".join(self.api("whois_check", args, ""))), True)
             else:
                 chat_message("<font color='#%s' face='%s' size='%s'><b>%s</b>, I don't know anything about that account yet.</font>" % (font_color, font_face, font_size, self.getAlias(user.name)), True)
-        
-        # Command Usage: '<3 or 'ily or 'ilu
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_ily and message.body.lower() == "<3" or self.getAccess(user.name) >= lvl_config.rank_req_say_ily and message.body.lower() == "ily" or self.getAccess(user.name) >= lvl_config.rank_req_say_ily and message.body.lower() == "ilu":
-            try:
-                chat_message("<font color='#%s' face='%s' size='%s'>%s</font>" % (font_color, font_face, font_size, random.choice(["*h* u too %s :D" % self.getAlias(user.name), "Wanders over to %s and sits in their lap o-o *h*" % self.getAlias(user.name), "D'awww <3 %s" % self.getAlias(user.name)])), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: ily] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: "hello <bot's username>" or "hey <bot's username>" or "hai <bot's username>" or "hi <bot's username>"
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_hello and message.body.lower() == "hello %s" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_hello and message.body.lower() == "hey %s" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_hello and message.body.lower() == "hai %s" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_hello and message.body.lower() == "hi %s" % bot_conf.botname.lower():
-            try:
-                chat_message("<font color='#%s' face='%s' size='%s'>hey %s ^-^</font>" % (font_color, font_face, font_size, self.getAlias(user.name)), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: hello] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: "*licks <botname>*" "//licks <botname>//" "~licks <botname>~" "-licks <botname>-"
-        if self.getAccess(user.name) >= lvl_config.rank_req_emote_lick and message.body.lower() == "*licks %s*" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_emote_lick and message.body.lower() == "~licks %s~" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_emote_lick and message.body.lower() == "-licks %s-" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_emote_lick and message.body.lower() == "//licks %s//" % bot_conf.botname.lower():
-            try:
-                if user.name.lower() == bot_conf.botowner:
-                    chat_message("<font color='#%s' face='%s' size='%s'>mmm.. %s, lick me again.. ;D</font>" % (font_color, font_face, font_size, self.getAlias(user.name)), True)
-                else:
-                    chat_message("Bish, don't lick me wit yo nasty tongue.")
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: lick_emote] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: "<botname> behave" "<botname> be good" "bad <botname>"
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_behave and message.body.lower() == "%s behave" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_behave and message.body.lower() == "%s be good" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_behave and message.body.lower() == "bad %s" % bot_conf.botname.lower():
-            try:                   
-                chat_message("<font color='#%s' face='%s' size='%s'>sorry <b>%s</b> >///>, I'll be a good boy now.. </font>" % (font_color, font_face, font_size, self.getAlias(user.name)), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: behave] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: "the cake is a lie" "the cake's a lie" "bish, the cake is fake"
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_cake and message.body.lower() == "the cake is a lie" or self.getAccess(user.name) >= lvl_config.rank_req_say_cake and message.body.lower() == "the cake's a lie" or self.getAccess(user.name) >= lvl_config.rank_req_say_cake and message.body.lower() == "bish, the cake is fake":
-            try:
-                chat_message("<font color='#%s' face='%s' size='%s'><b>%s</b> %s</font>" % (font_color, font_face, font_size, self.getAlias(user.name), random.choice(["Thas right! That cake is a lie.", "You.. you.. LIAR! ~noms cake~", "BAD! MY CAKE!", "Cake... o.o", "~stabs~ Don't mess with the cake!"])), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: cake_rant] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: "*gives <botname> a cookie*" "//gives <botname> a cookie//" "~gives <botname> a cookie~" "-gives <botname> a cookie-"
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_cookie and message.body.lower() == "*gives %s a cookie*" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_cookie and message.body.lower() == "~gives %s a cookie~" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_cookie and message.body.lower() == "-gives %s a cookie-" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_cookie and message.body.lower() == "//gives %s a cookie//" % bot_conf.botname.lower():
-            try:
-                chat_message("<font color='#%s' face='%s' size='%s'>%s</font>" % (font_color, font_face, font_size, random.choice(["~noms cookie~ <3", "~throws cookie away~ Blegh", "~licks cookie~", "Yum <3", "Cookie... o.o"])), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: cookie_give] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: "<botname> how're you?" "<botname> how are you?" "how are you, <botname>?" "<botname> hru"
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_hru and message.body.lower() == "%s hru" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_hru and message.body.lower() == "%s how're you?" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_hru and message.body.lower() == "%s how are you?" % bot_conf.botname.lower() or self.getAccess(user.name) >= lvl_config.rank_req_say_hru and message.body.lower() == "how are you, %s?" % bot_conf.botname.lower():
-            try:
-                chat_message("<font color='#%s' face='%s' size='%s'>%s</font>" % (font_color, font_face, font_size, random.choice(["Fabulous <3", "Great!", "v.v I missed you", "Lonely", "I'm okie.."])), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: hru] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-
-        # Command Usage: 'ps <username> 'pimpslap <username>
-        if used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_say_pslap and (cmd == "pimpslap" or cmd == "ps") and len(args) > 3:
-            try:
-                name = args.lower()
-                if name in room.usernames:
-                    chat_message("~pimpslaps <b>%s</b>~, Bish wheres my money" % self.getAlias(name), True)
-                if not name in room.usernames: 
-                    chat_message("Bring that bish to me. I want my monies. -_-'")
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: pimpslap] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
-        
-        # Command Usage: '<botname> go away' or '<botname> leave me alone'
-        if self.getAccess(user.name) >= lvl_config.rank_req_say_leave and (message.body.lower() == "%s go away" % bot_conf.botname.lower() or message.body.lower() == "%s leave" % bot_conf.botname.lower()):
-            try:
-                chat_message("<font color='#000000'><b>%s</b>, I know when I am not wanted..</font> ;(" % self.getAlias(user.name), True)
-            except Exception as e:
-                error_log_file = open("storage/flatfile/logs/error.log", "a")
-                error_log_file.write("[%s] [Error:] %s [Command: unwanted] \n" % (cur_msg_time, e))
-                error_log_file.close()
-        # Command End
         
         # Command Usage: "<botname>, would you like to play a game?" / Games: flipcoin (fc), spin-the-bottle (sb), Magic 8-Ball (8ball), Russian Roulette (rr)
         elif self.getAccess(user.name) >= lvl_config.rank_req_game_list and message.body.lower() == "%s, would you like to play a game?" % bot_conf.botname.lower():
@@ -556,35 +449,7 @@
 
         elif used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_game_8ball and cmd == "8ball" and len(args) > 0:
                                   chat_message("<i>The 8ball says</i> - <b>%s</b> -" % (random.choice(persona.eightball)), True)
-                        
-        #kill
-        elif used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_cmd_kill and cmd == "kill"  and len(args) > 0:
-               if self.getAccess(user.name) >= 1:
-                        name = args
-                        if name == "%" % bot_conf.botname.lower():
-                                chat_message("im not that stupid :P")
-                        if name == bot_conf.botowner:
-                                chat_message("Like i would kill one of my owners, you think im stupid dont you :P")
-                        else:
-                                if name in room.usernames: chat_message(random.choice(["Hands %s a grenade -waits 10 seconds- *BOOM* %s is KEELED xD" % (args, args,), "Hmm i dont wanna kill %s -LIES- I DO %s IS DEAD MUAHAHA" % (args ,args),]))
-                                if name not in room.usernames: chat_message("Nuuuuu :3 they arent here")
 
-        #oreo
-        elif used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_say_oreo and cmd == "oreo"  and len(args) > 0:
-               if self.getAccess(user.name) >= 1:
-                        name = args
-                        if name in room.usernames: chat_message(random.choice(["throws oreo at %s  ]:)" % (args), "forces %s to eat a oreo ]:)" % (args),]))
-                        if name not in room.usernames: chat_message("saves it for later ]:)")
-                
-        # Command Usage: 'dance
-        elif (used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_cmd_dance and cmd == "dance"):
-            dancemoves = ["(>^.^)> (>^.^<) <(^.^)>",]
-            if self.getAccess(user.name) >= 1:
-                    for i, msg in enumerate(dancemoves):
-                            self.setTimeout(i / 2, chat_message, msg)
-            else:
-                    chat_message("no dances for you >_>")
-        # Command End
         if used_prefix and self.getAccess(user.name) >= lvl_config.rank_req_cmd_rfact and (cmd == "rf" or cmd == "randomfact"):
                 chat_message("<b>%s</b> did you know: <b>%s</b>" % (self.getAlias(user.name), random.choice(randomfacts)), True)
         if used_prefix and cmd == "udict" and len(args) >= 1 and self.getAccess(user.name) >= lvl_config.rank_req_cmd_udict:

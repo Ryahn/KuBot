@@ -1,0 +1,492 @@
+version-0.05.04-alpha
+
+Link change for updates, more efficient.
+
+
+version-0.05.03-alpha
+
+Hopefully fixes auto update issues where the bot doesn't update after the number of minutes in config passes
+Adds new config options for font_face and font_size. Do not go over 12 if you are not a chatango premium member.
+
+
+version-0.05.02-alpha
+
+Fixes update command, prevents it from crashing the bot upon update_check.
+
+
+version-0.05.01-alpha
+
+Adds whois command, and a new setting in lvl_config for rank_req_whois
+Sets rank_req_whois to 2 by default
+Adds API for whois
+Transmits information about users when the bot is modded, this improves the effectiveness of commands that rely on the API
+
+
+version-0.05.00-alpha
+
+Fixes issue in promote/demote code where it doesn't understand difference between -1 and 1
+Fixes restart command
+Fixes issue during automatic restart for updates.
+
+
+version-0.04.99-alpha
+
+Fixes the promote/demote codes to where the file doesn't have a bunch of unknown text in it.
+Fixes issue with import logging, this is no longer capable on windows 7 or windows 8 so it was removed
+Updated a few commands with try/except statements, pushes out errors to storage/flatfile/logs/error.log
+
+
+version-0.04.98-alpha
+
+Made some corrections in a few commands
+'leave roomname works again
+'restart works again
+'promote doesn't bug out like it was
+
+Made some try/except updates in commands so that instead of shutting the bot down they'll send a message to the error log.
+
+version-0.04.97-alpha
+
+Automatic Update Agent
+Bot will check for update every 30 minutes (default, can be changed in config.py)
+
+Added 'update command (Forces manual update.)
+
+Added auto modifier for lvl_config.py, this allows the script to append changes to lvl_config.py automatically as new features are pushed.
+Added 3 config options.
+
+gender = "male" (set bot gender, male will output "boy" and female will output "girl")
+update_interval = "30" # Minutes
+update_check = "yes" # Do you want automatic updates?
+
+added "lockdown_mode_bypass" to lvl_config
+
+
+version-0.04.96-alpha
+!!!WARNING!!! YOU MUST RESTART THE BOT TWICE IF YOU ARE UPDATING TO THIS VERSION
+Updated launch.py, includes new code to update the config.py on the fly, allowing for new config options to be placed without causing errors.
+
+Updates to bot.py
+def Updates
+New! self.getRank(user) You can get the rank of any user, will return something like "Bot Owners" for botowner, etc. Just put their username in self.getRank(%)
+Updated! self.getAccess(user) You can now get the access level of any user, instead of just user.name. Just put their username in self.getAccess(%)
+New! self.getAlias(user) You can now get the alias (call me) of any user, instead of 'user' just put the username of the person you are searching for.
+New! self.chatLog - Not something you will use, but cleans up the chat logs and outputs them into a file.
+New! self.cmdLog - Something you will use if you want to log command usage. Read the readme for help with this command.
+New! self.savRanks - Saves all the users back to file. Use this if doing any modifications to the users table.
+
+New File: ranks_config.py - use this to setup custom ranks!
+
+Removed Commands:
+Removed 'save command, no longer needed
+
+Updated Commands:
+Rewrote 'whoami, no longer needs to check for an alias since the alias check is done by self.getAlias(user)
+
+Core Changes:
+Removed the individual load per rank, created a quick load that loads all users into users[]
+
+
+version-0.04.95-alpha
+
+Updated launcher for upcoming release.
+Launcher adds config updating system
+Launcher adds commands.py restructuring (replaces self.getAccess(user) with self.getAccess(user.name)
+
+
+version-0.04.94-alpha
+
+Total rewrite of "define" dictionary.
+Uses XML Parsing now.
+
+Moved 'define, 'df, 'def command from bot.py to bot_commands.py
+Removed 'ud, 'udef, 'undefine
+
+'df usage, 'df word as definition (defines the word), 'df word (looks up the word), 'df rem/remove word (removes the word)
+
+'''
+lvl_config.py changes:
+# Minimum rank to define a term:
+rank_req_define = 1
+rank_req_udef = 1
+
+# Minimum rank to remove a term (when the user isn't the term's author)
+rank_req_udef_mast = 3
+'''
+
+Added Files:
+storage/flatfile/various/dict.xml
+
+Updated Files:
+bot_commands.py
+storage/update/bot.py
+storage/update/cmds.py
+lvl_config.py
+version.txt
+changelog.txt
+
+version-0.04.93-alpha
+
+Fixes "persona" spam
+Bot will now only respond to any given persona once every 10 seconds, no matter how many people spam it.
+
+Updates commands:
+persona 'butterfly'
+persona 'fishes'
+
+Changed Files:
+bot_commands.py
+storage/update/bot.py
+storage/update/cmds.py
+version.txt
+changelog.txt
+
+version-0.04.92-alpha
+
+Updates 'ut, 'uptime
+
+Breaks it into days, hours, minutes, seconds
+Only shows days, hours, and minutes if they exist (are greater than 0)
+
+Changed Files:
+bot_commands.py
+storage/update/cmds.py
+version.txt
+changelog.txt
+
+
+version-0.04.91-alpha
+
+Fixes 'ut, 'uptime
+Moves 'ut, 'uptime to bot_commands.py
+
+Changed Files:
+bot_commands.py
+storage/update/bot.py
+storage/update/cmds.py
+version.txt
+changelog.txt
+
+
+version-0.04.90-alpha
+
+Fixes pm send issue in unban code.
+
+Changed Files:
+bot_commands.py
+storage/update/cmds.py
+version.txt
+changelog.txt
+
+
+version-0.04.89-alpha
+
+Moved commands from bot.py to bot_commands.py:
+'find <username> (Currently not-working, will be fixed in future release.)
+'unban, 'ub (Rewrote to also send a pm to the user letting them know they're unbanned.)
+'rooms, 'rooms join <roomname>, 'rooms leave <roomname>
+
+Updated lvl_config with new options for the above commands
+rank_req_rooms_list = 1
+rank_req_rooms_join = 4
+rank_req_rooms_leave = 4
+rank_req_cmd_find = 1
+rank_req_unban = 4
+
+Changed Files:
+storage/update/bot.py
+storage/update/cmds.py
+version.txt
+changelog.txt
+bot_commands.py
+lvl_config.py
+
+
+version-0.04.88-alpha
+
+Rewrote Commands:
+Google Image Search
+Youtube Search
+
+Uses new regex-style search for accuracy.
+
+Cleaned up some old debugging console prints.
+
+
+version-0.04.87-alpha
+
+Additional bugfixing in:
+Google Image Search
+Youtube Search
+
+
+version-0.04.86-alpha
+
+Moves the following commands to bot_commands.py out of bot.py
+'lockdown, 'ld | 'lockdown release, 'ld release
+'ytb, 'tube, 'yt
+'gis
+
+Updates lvl_config.py with new ids for the above 3 commands
+rank_req_lockdown = 4
+rank_req_youtube_search = 1
+rank_req_image_search = 1
+
+Fixes:
+Youtube Search
+Google Image Search
+
+
+version-0.04.85-alpha
+
+fixes bug in bot_commands.py with commands:
+'rf
+'udict
+
+commands were placed after persona, which resplits command data.
+
+version-0.04.84-alpha
+
+adds lvl_config.rank_req_cmd_udict (sets to 1)
+adds 'udict <term> for urban dictionary
+
+
+version-0.04.83-alpha
+
+adds lvl_config.rank_req_mass_pm (sets to 7)
+adds lvl_config.rank_req_gnews (sets to 5)
+
+updates 'gnews to:
+'announce
+'a
+'bcast
+'broadcast
+
+version-0.04.82-alpha
+
+corrects issue with 'banvote <username> not activating, related to mispell in lvl_config
+
+
+version-0.04.81-alpha
+
+added ranks_config.py for adding more ranks (currently unfinished so don't bother editing it at this time)
+added lvl_config.py for modifying the required levels to use each command.
+updated bot & bot_commands so that lvl_config will mostly take effect immediately.
+
+note, backup your lvl_config.py before each update until we get everything ironed out.
+
+
+version-0.04.80-alpha
+
+updated call me command to say more than just "Recorded! ^_^ I will now call you %s"
+
+
+version-0.04.79-alpha
+
+hopefully fixes issue with /bin/bash launch via restart command
+
+
+version-0.04.78-alpha
+
+fixes issue with launch.sh, still requires python3 as the binary name (allows for systems running multiple versions of python, python3.2 is the required version!)
+
+
+version-0.04.77-alpha
+
+fixes line error 3604 in start.py (temp file) regarding str to int conversion
+
+
+version-0.04.76-alpha
+
+hopefully fixes a launcher bug in linux
+
+
+version-0.04.75-alpha
+
+setup a 10-vote banvote requirement. At least 10 votes must be given (either for or against) for a banvote to continue to the actual step of banning.
+
+
+version-0.04.74-alpha
+
+added 'banvote username feature
+updated code to allow anyone to use bot commands (commands that require access are not affected)
+
+
+version-0.04.73-alpha
+
+Updated Commands:
+'fc 'flipcoin - Added "nickname" to message output, added another random.choice option, added font coloring by config.
+'games? to "<botname>, would you like to play a game?" - Added nickname to output, changed command from needing prefix, added font coloring for config.
+'dance - moved dancemoves list array to bot_commands.py so that the command is more clean.
+'rr, 'russian-roulette - Added "nickname" to message output, added another random.choice option, modified existing options, added font coloring based on config.
+
+version-0.04.72-alpha
+
+Added 'demote <username>, and 'demote <username> <rank_number>
+
+
+version-0.04.59-alpha
+
+Fixes codec error in commands.py
+
+
+version-0.04.58-alpha
+
+Fixes extractall No Define on Windows Systems
+
+
+version-0.04.57-alpha
+
+Bug Fixing.
+
+
+version-0.04.56-alpha
+
+Error in Launch.py (Extracting)
+
+
+version-0.04.55-alpha
+
+Error in Launch.py (Extraction)
+
+
+version-0.04.54-alpha
+
+Bug Fixing.
+
+
+version-0.04.53-alpha
+
+Bug Fixing.
+
+
+version-0.04.52-alpha
+
+Updated 'restart
+'restart command restarts the bot by disconnecting from all the rooms, the bot then launches restart.bat.
+restart.bat force closes any python script launched by that user, be careful if running this as administrator
+as it will also force close any python script by all users if the prompt is running as admin or root.
+(You should never run this python script as root or administrator)
+
+Added Config Option "prefix"
+If you do not want to re-do your configuration, please edit config.py and include the following:
+
+# Command Prefix
+prefix = "'"
+
+prefix is how your bot knows what a command is, such as 'restart, or ~restart or whatever you make the prefix to be.
+
+Did some code-cleanup on bot.py, you may not notice it on your end since bot.py shouldn't be edited by you as the end 
+user, but on the development side, it helps us ensure that the code is clean and easier for us to make changes to various 
+functions and statements. 
+
+
+version-0.04.51-alpha
+
+Bug fixing in launch.py
+Added SQLite3 Exe (For Future Use)
+Code Cleanup in bot.py
+Added launch.sh
+Renamed launch2.bat to launch.sh
+
+
+version-0.04.50-alpha
+
+Added Commands:
+remove my access
+'leave
+'leave roomname
+
+Updated Commands:
+'ver
+'v
+'version
+
+||| Added Commands |||
+remove my access
+	Tells the bot to remove the access for the current user. If the user is the bot owner 
+	this command will be ignored. Anyone else can be removed by them using this command.
+	This will not remove a user from blacklist.
+
+'leave & 'leave roomname
+	This tells the bot to exit the room specified. If no room is specified the bot will leave 
+	the current room it is in. This will not remove the room from the room list.
+
+||| Updated Commands |||
+'ver, 'v and 'version
+	This command now shows the current version information for the bot as noted in the bot's
+	version information file. Also displays the original source (Sorch) for Botteh 1.2, and 
+	the bot owner and the maintainer of the bot's source code repository (Me)
+
+
+version-0.04.49-alpha
+
+Removed the following commands:
+'owners
+'smasters
+'master
+'moderator
+'trusted
+'donator
+'member
+'blacklist
+
+Members can be promoted using the 'promote command
+
+Added more options in the config.py:
+name_color
+font_color
+background_color
+update_cmds
+
+name_color
+	Requires you to use the hexadecimal version of the color, you can go to http://www.colorpicker.com/ 
+	to determine what your hex will be. The # should not be included. This controls the color that is shown
+	on chatango for the username.
+
+font_color
+	Requires you to use the hexadecimal version of the color, you can go to http://www.colorpicker.com/ 
+	to determine what your hex will be. The # should not be included. This controls the color that is shown
+	on chatango for the message text.
+
+background_color
+	Requires you to use the hexadecimal version of the color, you can go to http://www.colorpicker.com/ 
+	to determine what your hex will be. The # should not be included. This controls the color that is shown
+	on chatango for the background of the bot. Eventually you may be able to use an image url in this field. (Future thoughts.)
+
+update_cmds
+	A yes or no question, if you choose yes, we will download any updates we make to commands.py from the
+	update site, if you choose no we will ignore commands.py. Choose yes if you don't make your own commands, 
+	choose no if you make your own. Default is yes.
+
+
+version-0.04.48-alpha
+
+Added a very basic "automatic updater" that checks the bot's current version against the version @ kubot.dubbedepisodes.com
+
+
+version-0.04.47-alpha
+
+Updated 'reset command to reset the bot back to no users except the bot owner.
+
+
+version-0.04.46-alpha
+
+Introduced 'promote command to promote users through the ranks with established rank limits.
+
+
+version-0.04.45-alpha
+
+Introduced "call me" alias command to coincide with 'alias add.
+
+Introduced 'alias command to replace Botteh 1.2's "nick" command. Alias is more efficient and accurate.
+
+
+version-0.04.44-alpha
+
+Bug fixing.
+
+
+version-0.04.43-alpha
+
+Bug fixing.

@@ -815,7 +815,7 @@ class b(ch.RoomManager):
             # Save all the data now.
             self.savRanks()
         # Command End
-        # Advanced "Moderator" Commands
+
         # Command Usage: 'delete <username> or 'del <username>
         elif used_prefix and self.getAccess(user.name.lower()) >= lvl_config.rank_req_del and (cmd == "delete" or cmd == "del") and len(args) > 0:
             reqrank = 4
@@ -829,6 +829,7 @@ class b(ch.RoomManager):
                 chat_message("Error: You do not have the required permission. You have been reported to my master. :@+15")
                 self.pm.message(ch.User(bot_conf.botowner.lower()), "The user %s attempted to use the command: %s. This user does not have permission. I have added them in the warnings list." % (user.name, cmd))
         # End Command: Delete
+        
         # Command Usage: 'ban <username>
         elif used_prefix and self.getAccess(user.name.lower()) >= lvl_config.rank_req_ban and cmd == "ban" and len(args) > 0:
             reqrank = lvl_config.rank_req_ban
@@ -836,7 +837,6 @@ class b(ch.RoomManager):
             # Fill "name" with the "username" to be deleted & banned.
             name = args
             name = name.lower()
-            # Now the command test to make sure the user has enough access.
             if self.getAccess(user.name.lower()) >= reqrank:
                 if name == user.name:
                     chat_message("Silly %s, you can't ban yourself." % user.name)
@@ -861,12 +861,24 @@ class b(ch.RoomManager):
                 self.pm.message(ch.User(bot_conf.botowner.lower()), "The user %s attempted to use the command: %s. This user does not have permission. I have added them in the warnings list." % (user.name, cmd))
         # Command End
 
-        # Command Usage: 'call me <alias>'
-        my_alias = message.body.split(" ", 3)
-        if self.getAccess(user.name.lower()) >= lvl_config.rank_req_callme and my_alias[0] == "call" and my_alias[1] == "me":
+        # Command Usage: call me <alias>'
+        try:
+            my_alias = message.body.split(" ", 3)
+            
+            if len(my_alias) > 2:
+                cmd_part_1 = my_alias[0]
+                cmd_part_2 = my_alias[1]
+            elif len(my_alias) < 2:
+                cmd_part_1 = ""
+                cmd_part_2 = ""
+        except Exception as e:
+            cmd_part_1 = ""
+            cmd_part_2 = ""
+            
+        if self.getAccess(user.name.lower()) >= lvl_config.rank_req_callme and cmd_part_1 == "call" and cmd_part_2 == "me":
             whole_body = message.body
             whole_body = whole_body.replace("call me ", "");
-            whole_body = whole_body.replace(",", "");
+            whole_body = whole_body.replace(",", "&#44;");
             chat_message("<font color='#%s' face='%s' size='%s'>%s <b>%s</b></font>" % (font_color, font_face, font_size, random.choice(["Recorded! ^_^ I will now call you", "Registah'd, you are now", "Yo, dis mah big homie, I call dem", "Ye-a-a-ah, I guess I can call you that...", "If I have to.. I suppose I'll call you..", "I decided I will call you"]), whole_body), True)
             alias_flag = 0
             finished_proc = 1
@@ -990,73 +1002,42 @@ class b(ch.RoomManager):
                   room.message("Your message has been sent successfully to %s!" % target.title())
         # Command End
 
-
-        #shutdown#
-
+        # Command Usage: 'shutdown, 'sd - Used to shutdown the bot properly.
         elif used_prefix and cmd == ("shutdown" or cmd == "sd") and self.getAccess(user.name.lower()) >= lvl_config.rank_req_cmd_shutdown:
+            if user.name.lower() == bot_conf.botowner: room.message("but.. but.. %s doesn't want to go!! :( ;( " % bot_conf.botname, True)
+            self.setTimeout(1, self.stop)
+        # Command End
 
-                if user.name.lower() == bot_conf.botowner: room.message("but.. but.. %s doesn't want to go!! :( ;( " % bot_conf.botname, True)
-
-                self.setTimeout(1, self.stop)
-
-        #banroom#
-
+        # Command Usage: 'banroom add roomname, 'banroom remove roomname
         elif used_prefix and cmd == "banroom" or used_prefix and cmd =="badroom":
-
                 if len(args) >= 3:
-
                         do, name = args.lower().split(" ", 1)
-
                         if self.getAccess(ch.User(name)) > 3 or self.getAccess(user.name.lower()) <= 3:
-
                                 room.message("no. =/")
-
                                 return
-
                         if do == "add":
-
                                 if name in badrooms: room.message("%s is already a banned room. ^^" % room.name, True)
-
                                 else:
-
                                         badrooms.append(name)
-
                                         print("[SAV] Saving banrooms..")
-
                                         f = open("storage/flatfile/rooms/banned_'storage/flatfile/rooms/join_rooms.txt", "w")
-
                                         f.write("\n".join(badrooms))
-
                                         f.close()
-
                                         lself.getRoom("debotsch").message("%s added %s to the banroom list in %s" % (self.getAlias(user.name), name, room.name))
-
                                         room.message("<b>%s</b> it has been done. ^^ remember do not ban rooms without permission ^^" % self.getAlias(user.name), True)
-
                         elif do == "remove":
-
                                 if name not in badrooms: room.message("%s is not a banned room. ^^" % name, True)
-
                                 else:
-
                                         badrooms.remove(name)
-
                                         print("[SAV] Saving banroom..")
-
                                         f = open("storage/flatfile/rooms/banned_'storage/flatfile/rooms/join_rooms.txt", "w")
-
                                         f.write("\n".join(badrooms))
-
                                         f.close()
-
                                         self.getRoom("debotsch").message("%s removed %s from the banroom list in %s" % (self.getAlias(user.name), name, room.name))
-
                                         room.message("it has been done i can now join the room", True)
-
                         else:
-
                                 room.message("what? >.>", True)
-
+        # Command End
 
         # Command Usage: 'greets add username, 'greets remove username, 'greets rm username
         elif used_prefix and cmd == "greets" or used_prefix and cmd == "gr":
